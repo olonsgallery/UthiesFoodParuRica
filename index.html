@@ -1,0 +1,126 @@
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulir Pemesanan</title>
+</head>
+<body>
+    <h2>Formulir Pemesanan Uthies Food</h2>
+    <form onsubmit="return false;">
+        <label for="nama">Nama:</label><br>
+        <input type="text" id="nama" name="nama" required><br><br>
+
+        <label for="alamat">Alamat lengkap:</label><br>
+        <input type="text" id="alamat" name="alamat" required><br><br>
+
+        <label for="kota">Kec & Kota (wajib diisi lengkap untuk luar kota Makassar):</label><br>
+        <input type="text" id="kota" name="kota" required><br><br>
+
+        <label for="nohp">No HP yang dapat dihubungi:</label><br>
+        <input type="tel" id="nohp" name="nohp" required><br><br>
+
+        <label for="varian">Pilih Varian Rasa:</label><br>
+        <select id="varian" name="varian" onchange="toggleLevelPedas()">
+            <option value="Paru Goreng Rica-Rica">Paru Goreng Rica-Rica</option>
+            <option value="Paru Goreng Rica Rempah">Paru Goreng Rica Rempah</option>
+            <option value="Paru Goreng Rica Hijau">Paru Goreng Rica Hijau</option>
+            <option value="Paru Goreng Rica Kari">Paru Goreng Rica Kari</option>
+            <option value="Paru Goreng Rica Manis">Paru Goreng Rica Manis</option>
+            <option value="Paru Goreng Rica Blackpepper">Paru Goreng Rica Blackpepper</option>
+            <option value="Paru Goreng Rica Barbeque">Paru Goreng Rica Barbeque</option>
+            <option value="Paru Goreng Rica Super Pedas">Paru Goreng Rica Super Pedas</option>
+            <option value="Paru Goreng Blackpepper">Paru Goreng Blackpepper</option>
+            <option value="Paru Goreng Manis">Paru Goreng Manis</option>
+            <option value="Paru Goreng Rempah">Paru Goreng Rempah</option>
+            <option value="Paru Goreng Kari">Paru Goreng Kari</option>
+            <option value="Paru Goreng Barbeque">Paru Goreng Barbeque</option>
+        </select><br><br>
+
+        <div id="levelPedasContainer" style="display: none;">
+            <label for="levelPedas">Level Pedas:</label><br>
+            <select id="levelPedas" name="levelPedas">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select><br><br>
+        </div>
+
+        <label for="toples">Ukuran Toples:</label><br>
+        <select id="toples" name="toples">
+            <option value="Kecil">Kecil</option>
+            <option value="Besar">Besar</option>
+        </select><br><br>
+
+        <label for="jumlah">Jumlah Pesanan:</label><br>
+        <input type="number" id="jumlah" name="jumlah" min="1" value="1" required><br><br>
+
+        <button type="button" onclick="tambahKeKeranjang()">Tambah ke Keranjang</button><br><br>
+
+        <h3>Keranjang Belanja</h3>
+        <ul id="keranjang"></ul>
+
+        <p>📦 Pengiriman:</p>
+        <p>✅ Ongkir hanya bisa COD</p>
+        <p>⚠️ Harap konfirmasi ulang jika ingin ongkir NON COD</p>
+
+        <button type="button" onclick="kirimPesanan()">Kirim Pesanan</button>
+    </form>
+
+    <script>
+        let keranjang = [];
+
+        function toggleLevelPedas() {
+            var varian = document.getElementById("varian").value;
+            var levelPedasContainer = document.getElementById("levelPedasContainer");
+            
+            if (varian.includes("Rica") || varian.includes("Blackpepper")) {
+                levelPedasContainer.style.display = "block";
+            } else {
+                levelPedasContainer.style.display = "none";
+            }
+        }
+
+        function tambahKeKeranjang() {
+            var varian = document.getElementById("varian").value;
+            var toples = document.getElementById("toples").value;
+            var jumlah = document.getElementById("jumlah").value;
+            var levelPedas = document.getElementById("levelPedasContainer").style.display === "block" ? document.getElementById("levelPedas").value : "-";
+            
+            keranjang.push({ varian, toples, jumlah, levelPedas });
+            updateKeranjang();
+        }
+
+        function updateKeranjang() {
+            var keranjangList = document.getElementById("keranjang");
+            keranjangList.innerHTML = "";
+            keranjang.forEach((item, index) => {
+                keranjangList.innerHTML += `<li>${item.varian} (Toples: ${item.toples}, Level Pedas: ${item.levelPedas}, Jumlah: ${item.jumlah}) <button onclick="hapusItem(${index})">Hapus</button></li>`;
+            });
+        }
+
+        function hapusItem(index) {
+            keranjang.splice(index, 1);
+            updateKeranjang();
+        }
+
+        function kirimPesanan() {
+            var nama = document.getElementById("nama").value;
+            var alamat = document.getElementById("alamat").value;
+            var kota = document.getElementById("kota").value;
+            var nohp = document.getElementById("nohp").value;
+
+            if (keranjang.length === 0) {
+                alert("Keranjang belanja masih kosong!");
+                return;
+            }
+
+            var pesanan = keranjang.map(item => `${item.varian} (Toples: ${item.toples}, Level Pedas: ${item.levelPedas}, Jumlah: ${item.jumlah})`).join("%0A");
+            var message = `Pesanan Baru:%0A%0ANama: ${nama}%0AAlamat: ${alamat}%0AKec & Kota: ${kota}%0ANo HP: ${nohp}%0A%0AKeranjang Belanja:%0A${pesanan}`;
+            var whatsappUrl = `https://api.whatsapp.com/send?phone=6282254991990&text=${message}`;
+            
+            window.open(whatsappUrl, "_blank");
+        }
+    </script>
+</body>
+</html>
