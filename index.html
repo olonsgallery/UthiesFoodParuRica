@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -105,10 +106,10 @@
         }
 
         function kirimPesanan() {
-            var nama = encodeURIComponent(document.getElementById("nama").value);
-            var alamat = encodeURIComponent(document.getElementById("alamat").value);
-            var kota = encodeURIComponent(document.getElementById("kota").value);
-            var nohp = encodeURIComponent(document.getElementById("nohp").value);
+            var nama = document.getElementById("nama").value;
+            var alamat = document.getElementById("alamat").value;
+            var kota = document.getElementById("kota").value;
+            var nohp = document.getElementById("nohp").value;
 
             if (keranjang.length === 0) {
                 alert("Keranjang belanja masih kosong!");
@@ -116,7 +117,7 @@
             }
 
             var pesanan = keranjang.map(item => `${item.varian} (Toples: ${item.toples}, Level Pedas: ${item.levelPedas}, Jumlah: ${item.jumlah})`).join("%0A");
-            var message = `Pesanan Baru:%0A%0ANama: ${nama}%0AAlamat: ${alamat}%0AKec & Kota: ${kota}%0ANo HP: ${nohp}%0A%0AKeranjang Belanja:%0A${pesanan}`;
+            var message = encodeURIComponent(`Pesanan Baru:\n\nNama: ${nama}\nAlamat: ${alamat}\nKec & Kota: ${kota}\nNo HP: ${nohp}\n\nKeranjang Belanja:\n${pesanan}`);
             var whatsappUrl = `https://api.whatsapp.com/send?phone=6282254991990&text=${message}`;
             
             window.open(whatsappUrl, "_blank");
