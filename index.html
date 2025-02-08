@@ -5,7 +5,7 @@
     <title>Formulir Pemesanan</title>
 </head>
 <body>
-    <h2>Formulir Pemesanan Uthies Food</h2>
+    <h2>Formulir Pemesanan</h2>
     <form onsubmit="return false;">
         <label for="nama">Nama:</label><br>
         <input type="text" id="nama" name="nama" required><br><br>
@@ -105,10 +105,10 @@
         }
 
         function kirimPesanan() {
-            var nama = document.getElementById("nama").value;
-            var alamat = document.getElementById("alamat").value;
-            var kota = document.getElementById("kota").value;
-            var nohp = document.getElementById("nohp").value;
+            var nama = encodeURIComponent(document.getElementById("nama").value);
+            var alamat = encodeURIComponent(document.getElementById("alamat").value);
+            var kota = encodeURIComponent(document.getElementById("kota").value);
+            var nohp = encodeURIComponent(document.getElementById("nohp").value);
 
             if (keranjang.length === 0) {
                 alert("Keranjang belanja masih kosong!");
