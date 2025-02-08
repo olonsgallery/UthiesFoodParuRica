@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -6,7 +5,7 @@
     <title>Formulir Pemesanan</title>
 </head>
 <body>
-    <h2>Formulir Pemesanan</h2>
+    <h2>Formulir Pemesanan Uthies Food</h2>
     <form onsubmit="return false;">
         <label for="nama">Nama:</label><br>
         <input type="text" id="nama" name="nama" required><br><br>
@@ -65,7 +64,7 @@
         <p>✅ Ongkir hanya bisa COD</p>
         <p>⚠️ Harap konfirmasi ulang jika ingin ongkir NON COD</p>
 
-        <button type="button" onclick="kirimPesanan()">Kirim Pesanan</button>
+        <button type="button" onclick="kirimPesanan()">Kirim Pesanan via Whatsapp</button>
     </form>
 
     <script>
@@ -116,8 +115,8 @@
                 return;
             }
 
-            var pesanan = keranjang.map(item => `${item.varian} (Toples: ${item.toples}, Level Pedas: ${item.levelPedas}, Jumlah: ${item.jumlah})`).join("%0A");
-            var message = encodeURIComponent(`Pesanan Baru:\n\nNama: ${nama}\nAlamat: ${alamat}\nKec & Kota: ${kota}\nNo HP: ${nohp}\n\nKeranjang Belanja:\n${pesanan}`);
+            var pesanan = keranjang.map(item => `${item.varian} (Toples: ${item.toples}, Level Pedas: ${item.levelPedas}, Jumlah: ${item.jumlah})`).join("\n• ");
+            var message = encodeURIComponent(`Pesanan Baru:\n\n• Nama: ${nama}\n• Alamat: ${alamat}\n• Kec & Kota: ${kota}\n• No HP: ${nohp}\n\nKeranjang Belanja:\n• ${pesanan}`);
             var whatsappUrl = `https://api.whatsapp.com/send?phone=6282254991990&text=${message}`;
             
             window.open(whatsappUrl, "_blank");
